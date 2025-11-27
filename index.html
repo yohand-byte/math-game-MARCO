@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#667eea">
-    <meta name="description" content="משחק מתמטיקה אינטראקטיבי לילדים בני 7-8">
-    <title>🎮 Math Game - משחק מתמטיקה</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='96' y='120' font-size='100' fill='white' text-anchor='middle' font-weight='bold'>🎮</text></svg>">
-    
+    <meta name="description" content="משחק מתמטיקה למרקו">
+    <title>משחק מתמטיקה - מרקו</title>
     <style>
         * {
             margin: 0;
@@ -16,769 +12,764 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            direction: rtl;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-            height: 100%;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s ease;
         }
 
         body.light-mode {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-        }
-
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        /* Header */
-        header {
+        body.light-mode .container {
+            background: #ffffff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
             text-align: center;
-            margin-bottom: 40px;
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+            margin-bottom: 30px;
+            position: relative;
         }
 
         .theme-toggle {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.2);
+            top: 0;
+            left: 0;
+            background: none;
             border: none;
-            padding: 10px 15px;
-            border-radius: 50%;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 1.5em;
-            transition: all 0.3s;
+            padding: 5px;
         }
 
-        .theme-toggle:hover {
-            background: rgba(255,255,255,0.4);
-            transform: scale(1.1);
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        /* Menu Principal */
+        .player-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .player-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body.light-mode .player-name {
+            color: #764ba2;
+        }
+
         .menu {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            margin-top: 30px;
         }
 
-        .menu-title {
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        .mode-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .mode-btn {
-            padding: 30px;
-            border: none;
+        .mode-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            background: rgba(255,255,255,0.2);
+            padding: 25px;
             color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
         }
 
-        .mode-btn:hover {
+        .mode-card:hover {
             transform: translateY(-5px);
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.5);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .mode-btn.solo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
         }
 
-        .mode-btn.multi {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        /* Jeu */
-        .game {
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .game.active {
-            display: flex;
-        }
-
-        .game-header {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .game-header-item h3 {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-
-        .game-header-item p {
-            font-size: 2em;
+        .mode-title {
+            font-size: 24px;
             font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .game-header-item.timer p {
-            color: #ff6b6b;
+        .mode-description {
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        .game-header-item.score p {
-            color: #4ecdc4;
+        .exercise-type {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        /* Progress Bar */
+        .exercise-type:hover {
+            background: #e0e0e0;
+            transform: translateX(-5px);
+        }
+
+        .game-screen, .results-screen {
+            display: none;
+        }
+
+        .game-screen.active, .results-screen.active {
+            display: block;
+        }
+
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4ecdc4, #44a4b4);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             transition: width 0.3s ease;
         }
 
-        /* Question */
-        .question-card {
-            background: rgba(255,255,255,0.15);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #666;
         }
 
-        .question-title {
-            font-size: 0.9em;
-            opacity: 0.8;
+        .question-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
             margin-bottom: 20px;
         }
 
-        .question-display {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 30px 0;
-            letter-spacing: 5px;
-        }
-
-        .operator {
-            color: #4ecdc4;
-            margin: 0 10px;
-        }
-
-        .equal {
-            color: #ff6b6b;
-            margin: 0 10px;
-        }
-
-        /* Input */
-        .input-section {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            flex-direction: row-reverse;
-        }
-
-        input[type="number"] {
-            flex: 1;
+        .answer-input {
+            width: 100%;
             padding: 15px;
-            font-size: 2em;
-            border: none;
+            font-size: 24px;
+            border: 3px solid #667eea;
             border-radius: 10px;
             text-align: center;
-            font-weight: bold;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            direction: ltr;
         }
 
-        input[type="number"]::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        input[type="number"]:focus {
+        .answer-input:focus {
             outline: none;
-            border-color: #4ecdc4;
-            background: rgba(255,255,255,0.25);
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
         }
 
-        /* Boutons */
-        button {
-            padding: 12px 25px;
-            font-size: 1.1em;
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            width: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4ecdc4, #44a4b4);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            flex: 1;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: rgba(255,255,255,0.2);
+            background: #6c757d;
             color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            margin-top: 10px;
         }
 
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.3);
+            background: #5a6268;
         }
 
-        /* Feedback */
         .feedback {
-            display: none;
-            padding: 30px;
-            border-radius: 15px;
             text-align: center;
-            font-size: 1.5em;
-            margin-top: 20px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .feedback.show {
-            display: block;
+            font-size: 24px;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 30px;
         }
 
         .feedback.correct {
-            background: rgba(46, 213, 115, 0.3);
-            border: 2px solid #2ed573;
-            color: #2ed573;
+            color: #28a745;
+            animation: bounce 0.5s;
         }
 
         .feedback.incorrect {
-            background: rgba(255, 107, 107, 0.3);
-            border: 2px solid #ff6b6b;
-            color: #ff6b6b;
+            color: #dc3545;
+            animation: shake 0.5s;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
-        /* Résultats */
-        .results {
-            display: none;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
             text-align: center;
-            background: rgba(255,255,255,0.15);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .results.show {
-            display: block;
-        }
-
-        .results h2 {
-            font-size: 2.5em;
             margin-bottom: 20px;
         }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .results-item h3 {
-            opacity: 0.8;
-            margin-bottom: 10px;
-        }
-
-        .results-item p {
-            font-size: 2.5em;
+        .score-number {
+            font-size: 48px;
             font-weight: bold;
         }
 
-        /* Multiplayer */
-        .player-indicator {
+        .score-text {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .results-message {
+            font-size: 24px;
             text-align: center;
-            font-size: 1.5em;
             margin: 20px 0;
-            padding: 15px;
-            background: rgba(255,255,255,0.15);
+        }
+
+        .results-details {
+            background: #f8f9fa;
             border-radius: 10px;
-            animation: pulse 1s infinite;
+            padding: 20px;
+            margin: 20px 0;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2em;
-            }
-
-            .mode-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .question-display {
-                font-size: 2.5em;
-            }
-
-            .game-header {
-                grid-template-columns: 1fr;
-            }
+        .result-row:last-child {
+            border-bottom: none;
         }
 
-        /* Animations */
-        .hidden {
-            display: none;
+        .send-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        /* Install Button */
-        #install-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, #4ecdc4, #44a4b4);
+        .btn-send {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .btn-email {
+            background: #28a745;
             color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 50px;
+        }
+
+        .btn-email:hover {
+            background: #218838;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1ebc59;
+        }
+
+        .timer {
+            font-size: 24px;
             font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: none;
-            z-index: 1000;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        #install-btn.show {
-            display: block;
+        .hidden {
+            display: none !important;
         }
 
-        #install-btn:hover {
-            transform: scale(1.05);
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .player-name {
+                font-size: 24px;
+            }
+            
+            .question-text {
+                font-size: 24px;
+            }
+            
+            .answer-input {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
-<body class="light-mode">
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    <button id="install-btn" onclick="installApp()">📱 התקן אפליקציה</button>
-
+<body>
     <div class="container">
-        <header>
-            <h1>🎮 משחק מתמטיקה</h1>
-            <p>משחק אינטראקטיבי לילדים בני 7-8 שנים</p>
-        </header>
-
-        <!-- Menu Principal -->
-        <div id="menu" class="menu">
-            <div class="menu-title">📚 בחר את המצב שלך!</div>
-            <div class="mode-buttons">
-                <button class="mode-btn solo" onclick="startGame('solo')">
-                    👤 משחק יחידני<br><small>שחק לבדך!</small>
-                </button>
-                <button class="mode-btn multi" onclick="startGame('multi')">
-                    👥 משחק לשניים<br><small>שחקו ביחד!</small>
-                </button>
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <div class="player-info">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAC9AAAA/ACAIAAAAveY0VAAAlBklDQ1BJQ0MgUHJvZmlsZQAAeJztfXlYTX307+5kJ8oYEjKLrUFSIURlTObMYxKFCJkiMouQ4TXPIbSN8WbOWJJMKTJTNNKkeTh3r7XOd5+89/6e+zz3ed+/bvX0Obvj9Gmfvb+ftT5rrS84zt3SxctrdhWO4zzneM8f3s+++Zix45pXTeE0pE/8cHFd4GU3dKgTHLPHPz/y4+m1sabAdaVa7XXimZpa9s1edN9zuUnm//76Pz6qTXNb4Co9Zklfu1y95ntznMZa6XjoYm8vOH4tHdezs7A3l45TOM6pgb2FnXQ8WHraQNfV3WUax83Qlb4xcfVw9ZKOu0jHuu7TZnhKx72l43ezF3p6cJx7c+DxnL3QVfV74Yx13eaMHCE9LpG+mnC9OQ9uAefFzeZcuKVcc24o1wlxvvS8p/QcPLpJr+iGzw6TsB3XT3reg5sjHQ+SjrxUr3fjFuFrF0vf23N98cuCs+SspN/Rm+sofXWW0FJCB074H87JEs/JgZsrsS7F3z2Dc+e8JUY76Rk4SzfpeID0u105M85EOrbgzOG3wP1T3Zc41X0x8bSzx+c0NdllH5hEjw2HStDcdeH8RfQ9rAR+vNaTqk+1D1cbWi2z+kqdKjordXJ1XXSjapjW2FIjraZDzX01f9bqWWtbrQ+129VeUPtWHc06A+psrfOqbr26o+ruqRuvV19vhN52vZh61er1rrey3vV6OfWN60+rf6B+bINqDXo1WNQgpMEX/fr6jfor9C/pJzXUb+jYcHnDCw2/GNQ1cDDwNjhpENeIb2TVyK3RX40eNspt3LLxsMYrG59r/KFJ9Cadm7g12dnkbpOfho0M+xl6Gx41jDEsatqm6bCmvk3PNH3djGtm3Gx0s9XNzjV721yzuVnzsc3XND/f/G0LzRamLUa3WNUipEVcC2VLoeWIlstbnmr5vGVRq5atBrZa2Opwq8hWWa0NWtu3ntV6V+vbrb+3qdmmc5vJbTa2udgmwUjDqL3RcCMfoyCjaKPcto3bOrSd1XZn25ttE9vptOvUbny7Ne1C2sW2KxZaCo7CPGGfcE9IaV+7fZf2k9tvaH++fXz7MuM2xk7G3sYHjO8bp5nUMelqMsVkg8kFk3iTMtM2pk6mC0wPmN43TTWrbdbFbLLZerNzZnFmpR1adXDsMK/Dvg53OySb1zS3Mp9ovtY8xPyVeVHHFh37d5zbcXfHOx2/W+hadLIYb7Ha4ozFC4vCTs069e3k2emvTrc6JVrqWFpYjrVcZXna8rllgVVTqz5Wnla7rG5ZJVrrWFtYj7VeZX3a+oV1Qedmnft1ntN5d+fbnb93qdHFssuELmu7hHSJ7VLStVVXx67zu+7ver/r/a5fu9bubNl1Yte1XU93fdstoKtJ14ldt3S91vVr1+JuLboN7rau27lu97u97163u333Kd03dL/c/XP3gi6tuozosqHLhS4vurzuWti1Tde+Xed23df1Qdf3XUu6abUb3G11t/Pd7nf71O1b94ruFt0nd1/f/XT3Fz0+9CjrUdqjtMfFHp96fOtR1FOzp3XPhT0P9Lzf82vPop5avQb3WtzrZK/XvYp7lfdq32tmr529bvX61etbr+I+Wn3s+izt" class="player-photo" alt="מרקו">
+                <h1 class="player-name">מרקו</h1>
             </div>
         </div>
 
-        <!-- Jeu -->
-        <div id="game" class="game">
-            <div class="game-header">
-                <div class="game-header-item score">
-                    <h3>📊 ניקוד</h3>
-                    <p id="score">0</p>
-                </div>
-                <div class="game-header-item timer">
-                    <h3>⏱️ זמן</h3>
-                    <p id="timer">5:00</p>
-                </div>
-                <div class="game-header-item">
-                    <h3>📈 התקדמות</h3>
-                    <p id="progress-text">1/20</p>
-                </div>
+        <!-- Menu Screen -->
+        <div id="menuScreen" class="menu">
+            <div class="mode-card" onclick="selectMode('training')">
+                <div class="mode-icon">📚</div>
+                <div class="mode-title">מצב אימון</div>
+                <div class="mode-description">תרגל בלי לחץ - התוצאות לא נשלחות</div>
             </div>
+            
+            <div class="mode-card" onclick="selectMode('combat')">
+                <div class="mode-icon">⚔️</div>
+                <div class="mode-title">מצב קרב</div>
+                <div class="mode-description">מבחן אמיתי - התוצאות נשלחות לאבא!</div>
+            </div>
+        </div>
 
+        <!-- Exercise Selection Screen -->
+        <div id="exerciseScreen" class="hidden">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #667eea;">בחר סוג תרגיל</h2>
+            
+            <div class="exercise-type" onclick="startGame('school')">
+                <h3 style="margin-bottom: 10px;">📝 תרגילים מהשיעור</h3>
+                <p style="color: #666;">התרגילים מהמבחן האחרון שלך</p>
+            </div>
+            
+            <div class="exercise-type" onclick="startGame('multiples2')">
+                <h3 style="margin-bottom: 10px;">✖️ כפולות של 2</h3>
+                <p style="color: #666;">2, 4, 8, 16, 32... עד 2048!</p>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="backToMenu()">חזרה</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="game-screen">
+            <div class="timer" id="timer">⏱️ 05:00</div>
+            
             <div class="progress-bar">
-                <div id="progress" class="progress-fill" style="width: 5%"></div>
+                <div class="progress-fill" id="progressBar"></div>
             </div>
-
-            <div id="player-info" class="hidden">
-                <div class="player-indicator" id="player-text"></div>
+            
+            <div class="question-info">
+                <span id="questionNumber">שאלה 1/15</span>
+                <span id="currentScore">ניקוד: 0</span>
             </div>
-
-            <div class="question-card">
-                <div class="question-title" id="question-category">תרגיל 1</div>
-                <div class="question-display" id="question"></div>
-
-                <div class="input-section">
-                    <input 
-                        type="number" 
-                        id="answer" 
-                        placeholder="התשובה שלך..." 
-                        onkeypress="if(event.key === 'Enter') checkAnswer()"
-                    >
-                    <button class="btn-primary" onclick="checkAnswer()">בדוק ✓</button>
-                </div>
-
-                <div id="feedback" class="feedback"></div>
+            
+            <div class="question-box">
+                <div class="question-text" id="questionText">7 + 6 = ?</div>
+                <input type="number" class="answer-input" id="answerInput" placeholder="הקלד תשובה">
             </div>
-
-            <div id="next-button" class="hidden">
-                <button class="btn-primary" onclick="nextQuestion()">הבא →</button>
-            </div>
-
-            <button class="btn-secondary" onclick="backToMenu()">← חזור לתפריט</button>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <button class="btn btn-primary" onclick="checkAnswer()">בדוק תשובה</button>
+            <button class="btn btn-secondary" onclick="skipQuestion()">דלג</button>
         </div>
 
-        <!-- Résultats -->
-        <div id="results" class="results">
-            <h2>🏆 המשחק הסתיים!</h2>
-            <div id="results-content"></div>
-            <button class="btn-primary" style="margin-top: 20px;" onclick="backToMenu()">שחק שוב 🎮</button>
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="results-screen">
+            <div class="score-display">
+                <div class="score-number" id="finalScore">0</div>
+                <div class="score-text">הניקוד הסופי שלך</div>
+            </div>
+            
+            <div class="results-message" id="resultsMessage"></div>
+            
+            <div class="results-details">
+                <div class="result-row">
+                    <span>תשובות נכונות:</span>
+                    <span id="correctAnswers">0</span>
+                </div>
+                <div class="result-row">
+                    <span>סך הכל שאלות:</span>
+                    <span id="totalQuestions">0</span>
+                </div>
+                <div class="result-row">
+                    <span>זמן שחלף:</span>
+                    <span id="timeElapsed">0:00</span>
+                </div>
+                <div class="result-row">
+                    <span>אחוזי הצלחה:</span>
+                    <span id="successRate">0%</span>
+                </div>
+            </div>
+            
+            <div id="sendOptionsDiv" class="send-options hidden">
+                <button class="btn btn-send btn-email" onclick="sendEmail()">
+                    📧 שלח באימייל
+                </button>
+                <button class="btn btn-send btn-whatsapp" onclick="sendWhatsApp()">
+                    💬 שלח בוואטסאפ
+                </button>
+            </div>
+            
+            <button class="btn btn-primary" onclick="restartGame()">שחק שוב</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">חזרה לתפריט</button>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // ===== PWA INSTALLATION =====
-        let deferredPrompt;
+        // EmailJS Configuration
+        emailjs.init('J6SRq_9hlzb7fA9KB');
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-btn').classList.add('show');
-        });
+        // Game State
+        let currentMode = null; // 'training' or 'combat'
+        let currentExerciseType = null;
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = [];
+        let timerInterval = null;
+        let timeRemaining = 300; // 5 minutes in seconds
+        let startTime = null;
 
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted install');
-                        document.getElementById('install-btn').classList.remove('show');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        }
-
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
-        }
-
-        // ===== DONNÉES =====
-        const exercises = [
-            // תרגיל 1
-            { type: 'add', a: 7, b: 6, answer: 13, cat: 'תרגיל 1' },
-            { type: 'add', a: 6, b: 7, answer: 13, cat: 'תרגיל 1' },
-            { type: 'sub', a: 13, b: 7, answer: 6, cat: 'תרגיל 1' },
-            { type: 'sub', a: 13, b: 6, answer: 7, cat: 'תרגיל 1' },
-            
-            // תרגיל 2
-            { type: 'add', a: 8, b: 4, answer: 12, cat: 'תרגיל 2' },
-            { type: 'add', a: 4, b: 8, answer: 12, cat: 'תרגיל 2' },
-            { type: 'sub', a: 12, b: 8, answer: 4, cat: 'תרגיל 2' },
-            { type: 'sub', a: 12, b: 4, answer: 8, cat: 'תרגיל 2' },
-            
-            // תרגיל 3
-            { type: 'sub', a: 14, b: 9, answer: 5, cat: 'תרגיל 3' },
-            { type: 'sub', a: 17, b: 9, answer: 8, cat: 'תרגיל 3' },
-            { type: 'sub', a: 11, b: 7, answer: 4, cat: 'תרגיל 3' },
-            { type: 'sub', a: 16, b: 8, answer: 8, cat: 'תרגיל 3' },
-            { type: 'hole', a: 12, b: null, answer: 5, cat: 'תרגיל 3' },
-            
-            // תרגיל 4
-            { type: 'add', a: 5, b: 9, answer: 14, cat: 'תרגיל 4' },
-            { type: 'add', a: 6, b: 7, answer: 13, cat: 'תרגיל 4' },
-            { type: 'add', a: 13, b: 6, answer: 19, cat: 'תרגיל 4' },
-            { type: 'add', a: 16, b: 3, answer: 19, cat: 'תרגיל 4' },
-            { type: 'hole', a: 5, b: null, answer: 17, cat: 'תרגיל 4' },
+        // Exercise Sets
+        const schoolExercises = [
+            { q: "7 + 6", a: 13 },
+            { q: "6 + 13", a: 19 },
+            { q: "7 + 13", a: 20 },
+            { q: "5 + 9", a: 14 },
+            { q: "6 + 7", a: 13 },
+            { q: "13 + 6", a: 19 },
+            { q: "16 + 3", a: 19 },
+            { q: "13 - 6", a: 7 },
+            { q: "13 - 7", a: 6 },
+            { q: "14 - 9", a: 5 },
+            { q: "17 - 9", a: 8 },
+            { q: "11 - 7", a: 4 },
+            { q: "16 - 8", a: 8 },
+            { q: "12 - ___ = 5", a: 7 },
+            { q: "___ + 9 = 17", a: 8 }
         ];
 
-        // ===== VARIABLES GLOBALES =====
-        let currentIndex = 0;
-        let score = 0;
-        let answered = false;
-        let gameMode = null;
-        let timeLeft = 300;
-        let gameActive = true;
-        let player1Score = 0;
-        let player2Score = 0;
-        let currentPlayer = 1;
-        let timerInterval = null;
-
-        // ===== FONCTIONS =====
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-        }
-
-        function startGame(mode) {
-            gameMode = mode;
-            currentIndex = 0;
-            score = 0;
-            answered = false;
-            timeLeft = 300;
-            gameActive = true;
-            player1Score = 0;
-            player2Score = 0;
-            currentPlayer = 1;
-
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('game').classList.add('active');
-            document.getElementById('results').classList.remove('show');
-
-            if (mode === 'multi') {
-                document.getElementById('player-info').classList.remove('hidden');
-            } else {
-                document.getElementById('player-info').classList.add('hidden');
+        function generateMultiples2() {
+            const exercises = [];
+            // Multiplication: 2, 4, 8, 16... up to 2048
+            let num = 2;
+            for (let i = 0; i < 10; i++) {
+                exercises.push({ q: `${num / 2} × 2`, a: num });
+                num *= 2;
             }
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 1000);
-            displayQuestion();
+            // Division: reverse
+            num = 2048;
+            for (let i = 0; i < 10; i++) {
+                exercises.push({ q: `${num} ÷ 2`, a: num / 2 });
+                num /= 2;
+            }
+            return exercises.sort(() => Math.random() - 0.5); // Shuffle
         }
 
-        function updateTimer() {
-            if (!gameActive) return;
-            timeLeft--;
+        function selectMode(mode) {
+            currentMode = mode;
+            document.getElementById('menuScreen').classList.add('hidden');
+            document.getElementById('exerciseScreen').classList.remove('hidden');
+        }
+
+        function startGame(exerciseType) {
+            currentExerciseType = exerciseType;
             
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `${mins}:${secs.toString().padStart(2, '0')}`;
-
-            if (timeLeft <= 0) {
-                endGame();
+            if (exerciseType === 'school') {
+                questions = [...schoolExercises];
+            } else {
+                questions = generateMultiples2();
             }
+            
+            // Shuffle questions
+            questions = questions.sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            correctAnswers = 0;
+            wrongAnswers = [];
+            startTime = Date.now();
+            
+            document.getElementById('exerciseScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('active');
+            
+            if (currentMode === 'combat') {
+                timeRemaining = 300;
+                startTimer();
+            } else {
+                document.getElementById('timer').classList.add('hidden');
+            }
+            
+            showQuestion();
         }
 
-        function displayQuestion() {
-            if (currentIndex >= exercises.length) {
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
                 endGame();
                 return;
             }
-
-            const ex = exercises[currentIndex];
-            let display = '';
-
-            if (ex.type === 'add') {
-                display = `${ex.a} <span class="operator">+</span> ${ex.b} <span class="equal">=</span> ?`;
-            } else if (ex.type === 'sub') {
-                display = `${ex.a} <span class="operator">-</span> ${ex.b} <span class="equal">=</span> ?`;
-            } else if (ex.type === 'hole') {
-                display = `${ex.a} <span class="operator">+</span> ? <span class="equal">=</span> ${ex.answer}`;
-            }
-
-            document.getElementById('question').innerHTML = display;
-            document.getElementById('question-category').textContent = ex.cat;
-            document.getElementById('progress-text').textContent = `${currentIndex + 1}/20`;
-            document.getElementById('progress').style.width = `${((currentIndex + 1) / 20) * 100}%`;
-
-            const answerInput = document.getElementById('answer');
-            answerInput.value = '';
-            answerInput.focus();
-
-            document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
-            document.getElementById('next-button').classList.add('hidden');
-            answered = false;
-
-            if (gameMode === 'multi') {
-                document.getElementById('player-text').textContent = 
-                    `🎮 תור השחקן ${currentPlayer}!`;
-            }
-
-            updateScore();
+            
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.q + " = ?";
+            document.getElementById('questionNumber').textContent = 
+                `שאלה ${currentQuestionIndex + 1}/${questions.length}`;
+            document.getElementById('currentScore').textContent = `ניקוד: ${score}`;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('answerInput').focus();
+            
+            // Update progress bar
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
         }
 
         function checkAnswer() {
-            if (answered) return;
-
-            const userAnswer = parseInt(document.getElementById('answer').value);
-            const correctAnswer = exercises[currentIndex].answer;
-            const isCorrect = userAnswer === correctAnswer;
-
-            answered = true;
-
-            const feedback = document.getElementById('feedback');
-            feedback.classList.add('show');
-
-            if (isCorrect) {
-                feedback.classList.add('correct');
-                feedback.innerHTML = `✅ כל הכבוד! +10 נקודות!`;
-                
-                if (gameMode === 'solo') {
-                    score += 10;
-                } else {
-                    if (currentPlayer === 1) {
-                        player1Score += 10;
-                    } else {
-                        player2Score += 10;
-                    }
-                }
-            } else {
-                feedback.classList.add('incorrect');
-                feedback.innerHTML = `❌ אוי! התשובה הנכונה היא: ${correctAnswer}`;
-            }
-
-            document.getElementById('next-button').classList.remove('hidden');
-            updateScore();
-        }
-
-        function nextQuestion() {
-            currentIndex++;
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const correctAnswer = questions[currentQuestionIndex].a;
+            const feedbackEl = document.getElementById('feedback');
             
-            if (gameMode === 'multi') {
-                currentPlayer = currentPlayer === 1 ? 2 : 1;
+            if (isNaN(userAnswer)) {
+                feedbackEl.textContent = '❗ אנא הזן מספר';
+                feedbackEl.className = 'feedback incorrect';
+                return;
             }
-
-            if (currentIndex >= exercises.length) {
-                endGame();
+            
+            if (userAnswer === correctAnswer) {
+                feedbackEl.textContent = '✅ נכון! כל הכבוד!';
+                feedbackEl.className = 'feedback correct';
+                score += 10;
+                correctAnswers++;
             } else {
-                displayQuestion();
+                feedbackEl.textContent = `❌ לא נכון. התשובה הנכונה היא ${correctAnswer}`;
+                feedbackEl.className = 'feedback incorrect';
+                wrongAnswers.push({
+                    question: questions[currentQuestionIndex].q,
+                    correct: correctAnswer,
+                    given: userAnswer
+                });
             }
+            
+            setTimeout(() => {
+                currentQuestionIndex++;
+                showQuestion();
+            }, 1500);
         }
 
-        function updateScore() {
-            if (gameMode === 'solo') {
-                document.getElementById('score').textContent = score;
-            } else {
-                const totalScore = player1Score + player2Score;
-                document.getElementById('score').textContent = totalScore;
-            }
+        function skipQuestion() {
+            wrongAnswers.push({
+                question: questions[currentQuestionIndex].q,
+                correct: questions[currentQuestionIndex].a,
+                given: 'דילוג'
+            });
+            currentQuestionIndex++;
+            showQuestion();
         }
 
         function endGame() {
-            gameActive = false;
-            clearInterval(timerInterval);
-            document.getElementById('game').classList.remove('active');
-            document.getElementById('results').classList.add('show');
-
-            let resultsHTML = '';
-
-            if (gameMode === 'solo') {
-                resultsHTML = `
-                    <div class="results-grid">
-                        <div class="results-item">
-                            <h3>📊 ניקוד סופי</h3>
-                            <p>${score}</p>
-                        </div>
-                        <div class="results-item">
-                            <h3>⏱️ זמן שבו השתמשת</h3>
-                            <p>${5 - Math.floor(timeLeft / 60)} דקה</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                const winner = player1Score > player2Score ? 'שחקן 1' : player2Score > player1Score ? 'שחקן 2' : 'תיקו!';
-                resultsHTML = `
-                    <div class="results-grid">
-                        <div class="results-item">
-                            <h3>👤 שחקן 1</h3>
-                            <p>${player1Score}</p>
-                        </div>
-                        <div class="results-item">
-                            <h3>👤 שחקן 2</h3>
-                            <p>${player2Score}</p>
-                        </div>
-                    </div>
-                    <h3 style="font-size: 1.5em; margin-top: 20px;">🏆 המנצח: ${winner}</h3>
-                `;
+            if (timerInterval) {
+                clearInterval(timerInterval);
             }
+            
+            const endTime = Date.now();
+            const timeElapsed = Math.floor((endTime - startTime) / 1000);
+            const minutes = Math.floor(timeElapsed / 60);
+            const seconds = timeElapsed % 60;
+            const successRate = Math.round((correctAnswers / questions.length) * 100);
+            
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('timeElapsed').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            let message = '';
+            if (successRate >= 90) {
+                message = '🌟 מעולה! אתה כוכב!';
+            } else if (successRate >= 70) {
+                message = '👏 כל הכבוד! טוב מאוד!';
+            } else if (successRate >= 50) {
+                message = '💪 טוב! המשך להתרגל!';
+            } else {
+                message = '📚 בואו נתרגל עוד!';
+            }
+            document.getElementById('resultsMessage').textContent = message;
+            
+            // Show send options only in combat mode
+            if (currentMode === 'combat') {
+                document.getElementById('sendOptionsDiv').classList.remove('hidden');
+            } else {
+                document.getElementById('sendOptionsDiv').classList.add('hidden');
+            }
+        }
 
-            document.getElementById('results-content').innerHTML = resultsHTML;
+        function sendEmail() {
+            const timeElapsed = document.getElementById('timeElapsed').textContent;
+            const successRate = document.getElementById('successRate').textContent;
+            
+            let detailsText = '';
+            if (wrongAnswers.length > 0) {
+                detailsText = '\n\nשגיאות:\n';
+                wrongAnswers.forEach(w => {
+                    detailsText += `${w.question} = ? (תשובה נכונה: ${w.correct}, ניתן: ${w.given})\n`;
+                });
+            }
+            
+            const templateParams = {
+                from_name: 'מרקו',
+                to_email: 'yohan.d@qualiwatt.com',
+                score: score,
+                total: questions.length,
+                correct: correctAnswers,
+                time: timeElapsed,
+                success_rate: successRate,
+                details: detailsText || 'כל התשובות נכונות! 🎉'
+            };
+            
+            emailjs.send('service_5qgrys8', 'template_0vkv28s', templateParams)
+                .then(function(response) {
+                    alert('✅ הודעה נשלחה בהצלחה לאבא!');
+                }, function(error) {
+                    alert('❌ שגיאה בשליחה. נסה שוב או שלח בוואטסאפ.');
+                    console.error('EmailJS error:', error);
+                });
+        }
+
+        function sendWhatsApp() {
+            const timeElapsed = document.getElementById('timeElapsed').textContent;
+            const successRate = document.getElementById('successRate').textContent;
+            
+            let message = `🎮 תוצאות משחק מתמטיקה - מרקו\n\n`;
+            message += `ניקוד: ${score}/${questions.length * 10}\n`;
+            message += `תשובות נכונות: ${correctAnswers}/${questions.length}\n`;
+            message += `זמן: ${timeElapsed}\n`;
+            message += `אחוז הצלחה: ${successRate}\n`;
+            
+            if (wrongAnswers.length > 0) {
+                message += `\n❌ שגיאות:\n`;
+                wrongAnswers.forEach(w => {
+                    message += `${w.question} = ? (נכון: ${w.correct}, ניתן: ${w.given})\n`;
+                });
+            } else {
+                message += `\n🎉 כל התשובות נכונות!`;
+            }
+            
+            const whatsappUrl = `https://wa.me/33756978517?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function restartGame() {
+            document.getElementById('resultsScreen').classList.remove('active');
+            document.getElementById('exerciseScreen').classList.remove('hidden');
         }
 
         function backToMenu() {
-            clearInterval(timerInterval);
-            document.getElementById('menu').style.display = 'flex';
-            document.getElementById('game').classList.remove('active');
-            document.getElementById('results').classList.remove('show');
-            gameMode = null;
-            currentIndex = 0;
-            score = 0;
-            answered = false;
-            timeLeft = 300;
+            document.getElementById('exerciseScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('active');
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('menuScreen').classList.remove('hidden');
+            document.getElementById('timer').classList.remove('hidden');
+            currentMode = null;
+            currentExerciseType = null;
         }
 
-        // Auto-focus on load
-        window.addEventListener('load', () => {
-            document.getElementById('answer').focus();
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        // Enter key to submit answer
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
         });
     </script>
 </body>
