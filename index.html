@@ -648,6 +648,47 @@
                 opacity: 0;
             }
         }
+        
+        /* Alarm animations */
+        @keyframes alarmPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes alarmZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Question Timer Display */
+        .question-timer {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Yuval Style Badge */
+        .yuval-badge {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+            animation: bounce 2s infinite;
+        }
 
         /* Install Button */
         .install-prompt {
@@ -866,6 +907,13 @@
 
         <!-- Game Screen -->
         <div id="gameScreen" class="game-screen">
+            <!-- Yuval Style Badge -->
+            <div class="yuval-badge" id="yuvalBadge">
+                <span>✨</span>
+                <span>יובל סטייל</span>
+                <span>✨</span>
+            </div>
+
             <div class="timer-container hidden" id="timerContainer">
                 <div class="circular-timer">
                     <svg class="timer-ring" width="120" height="120">
@@ -888,6 +936,7 @@
             </div>
 
             <div class="question-card">
+                <div class="question-timer" id="questionTimerDisplay">⏱️ 20</div>
                 <div class="question-text" id="questionText">7 + 6 = ?</div>
                 <input type="number" class="answer-input" id="answerInput" placeholder="התשובה שלך">
             </div>
@@ -1016,8 +1065,11 @@
         let correctAnswers = 0;
         let wrongAnswers = [];
         let timerInterval = null;
+        let questionTimerInterval = null;
         let timeRemaining = 300;
+        let questionTimeRemaining = 20;
         let startTime = null;
+        let isSchoolExercise = false;
 
         const schoolExercises = [
             { q: "7 + 6", a: 13 },
@@ -1036,6 +1088,8 @@
             { q: "12 - ___ = 5", a: 7, isFillIn: true },
             { q: "___ + 9 = 17", a: 8, isFillIn: true }
         ];
+        
+        const yuvalStyleBadge = "יובל סטייל";
 
         function generateMultiples2() {
             const exercises = [];
@@ -1061,6 +1115,7 @@
 
         function startGame(exerciseType) {
             sounds.click();
+            isSchoolExercise = exerciseType === 'school';
             questions = exerciseType === 'school' ? [...schoolExercises] : generateMultiples2();
             questions = questions.sort(() => Math.random() - 0.5);
             
@@ -1072,6 +1127,12 @@
             
             document.getElementById('exerciseScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('active');
+            
+            // Show Yuval Style badge for school exercises
+            if (isSchoolExercise) {
+                const badge = document.getElementById('yuvalBadge');
+                if (badge) badge.style.display = 'flex';
+            }
             
             if (currentMode === 'combat') {
                 timeRemaining = 300;
@@ -1132,9 +1193,56 @@
             
             const progress = (currentQuestionIndex / questions.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Start 20-second question timer
+            startQuestionTimer();
+        }
+        
+        function startQuestionTimer() {
+            // Clear any existing timer
+            if (questionTimerInterval) {
+                clearInterval(questionTimerInterval);
+            }
+            
+            questionTimeRemaining = 20;
+            const timerDisplay = document.getElementById('questionTimerDisplay');
+            const questionCard = document.querySelector('.question-card');
+            
+            if (timerDisplay) {
+                timerDisplay.textContent = `⏱️ ${questionTimeRemaining}`;
+                timerDisplay.style.color = 'var(--text-dark)';
+                timerDisplay.style.transform = 'scale(1)';
+            }
+            
+            questionTimerInterval = setInterval(() => {
+                questionTimeRemaining--;
+                
+                if (timerDisplay) {
+                    timerDisplay.textContent = `⏱️ ${questionTimeRemaining}`;
+                    
+                    // Alarm effect when ≤ 5 seconds
+                    if (questionTimeRemaining <= 5 && questionTimeRemaining > 0) {
+                        timerDisplay.style.color = 'var(--error)';
+                        timerDisplay.style.animation = 'alarmPulse 0.5s ease-in-out';
+                        questionCard.style.animation = 'alarmZoom 0.5s ease-in-out';
+                        sounds.click(); // Beep sound
+                    }
+                    
+                    if (questionTimeRemaining <= 0) {
+                        clearInterval(questionTimerInterval);
+                        // Auto-skip to next question
+                        skipQuestion();
+                    }
+                }
+            }, 1000);
         }
 
         function checkAnswer() {
+            // Stop question timer
+            if (questionTimerInterval) {
+                clearInterval(questionTimerInterval);
+            }
+            
             const userAnswer = parseInt(document.getElementById('answerInput').value);
             const correctAnswer = questions[currentQuestionIndex].a;
             const feedbackEl = document.getElementById('feedback');
@@ -1143,6 +1251,8 @@
                 feedbackEl.textContent = '❗ אנא הזן מספר';
                 feedbackEl.className = 'feedback incorrect';
                 sounds.incorrect();
+                // Restart timer if invalid input
+                startQuestionTimer();
                 return;
             }
             
@@ -1171,6 +1281,11 @@
         }
 
         function skipQuestion() {
+            // Stop question timer
+            if (questionTimerInterval) {
+                clearInterval(questionTimerInterval);
+            }
+            
             sounds.click();
             wrongAnswers.push({
                 question: questions[currentQuestionIndex].q,
@@ -1197,6 +1312,7 @@
 
         function endGame() {
             if (timerInterval) clearInterval(timerInterval);
+            if (questionTimerInterval) clearInterval(questionTimerInterval);
             
             const endTime = Date.now();
             const timeElapsed = Math.floor((endTime - startTime) / 1000);
