@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -677,8 +678,8 @@
             { q: "17 - 9", a: 8 },
             { q: "11 - 7", a: 4 },
             { q: "16 - 8", a: 8 },
-            { q: "12 - ___ = 5", a: 7 },
-            { q: "___ + 9 = 17", a: 8 }
+            { q: "12 - ___", a: 7, hint: "5" },
+            { q: "___ + 9", a: 8, hint: "17" }
         ];
 
         function generateMultiples2() {
@@ -751,7 +752,16 @@
             }
             
             const question = questions[currentQuestionIndex];
-            document.getElementById('questionText').textContent = question.q + " = ?";
+            let questionText = question.q;
+            
+            // Handle fill-in-the-blank questions with hints
+            if (question.hint) {
+                questionText = questionText + " = " + question.hint;
+            } else {
+                questionText = questionText + " = ?";
+            }
+            
+            document.getElementById('questionText').textContent = questionText;
             document.getElementById('questionNumber').textContent = 
                 `שאלה ${currentQuestionIndex + 1}/${questions.length}`;
             document.getElementById('currentScore').textContent = `⭐ ${score}`;
