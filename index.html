@@ -39,7 +39,8 @@
             align-items: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            max-width: 100vw;
         }
 
         /* Animated Background Particles */
@@ -82,6 +83,8 @@
             position: relative;
             z-index: 1;
             animation: slideUp 0.6s ease-out;
+            overflow-x: hidden;
+            max-width: min(700px, 100vw - 40px);
         }
 
         @keyframes slideUp {
@@ -665,29 +668,99 @@
         }
 
         @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
-                padding: 24px;
+                padding: 20px;
                 border-radius: 24px;
+                max-width: calc(100vw - 20px);
             }
 
             .player-name {
-                font-size: 28px;
+                font-size: 24px;
+            }
+
+            .player-card {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .player-photo {
+                width: 70px;
+                height: 70px;
+            }
+
+            .mode-title {
+                font-size: 22px;
+            }
+
+            .mode-description {
+                font-size: 14px;
+            }
+
+            .mode-icon {
+                font-size: 48px;
             }
 
             .question-text {
-                font-size: 36px;
+                font-size: 28px;
+                word-break: break-word;
             }
 
             .answer-input {
                 font-size: 24px;
+                padding: 16px;
+            }
+
+            .feedback {
+                font-size: 18px;
+            }
+
+            .score-number {
+                font-size: 56px;
+            }
+
+            .result-value {
+                font-size: 28px;
             }
 
             .results-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
 
             .action-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 16px 24px;
+            }
+
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .circular-timer {
+                width: 100px;
+                height: 100px;
+            }
+
+            .timer-text {
+                font-size: 20px;
+            }
+
+            .sound-toggle {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+                bottom: 16px;
+                right: 16px;
             }
         }
 
