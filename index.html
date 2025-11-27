@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⛏️ משחק מתמטיקה - מרקו | Minecraft Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="משחק מתמטיקה אינטראקטיבי למרקו">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi157pqp7pnZgg157pqp7ph5Hpmp3ph5rpqp7ph44g157pnZDpqp7ph5DpnZ8iLCJzaG9ydF9uYW1lIjoi157pnZDpqp7ph5DpnZ8g157pqp7pnZgg157pqp7ph5Hpmp3ph5rpqp7ph44iLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFRQUFBQUVBQ0FJQUFBQS82UXQ5QUFBQUIzUkpUVVVINHdVR0J3Z0pBWE1BQUFBRWFWSFJBUUQ4L1A4QUFBQUJKcmVVbkFBQUNBWEJJV1hNQUFBN0VBQUFPeEFHVkt3NGJBQUFDa0VsRVFWUjRuTzNVTVc3Q01CQUYwVDBORkFBQUFBQUpjRWhBYldGMGFBQUFBQUFCSlJFRlVlQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQT09Iiwic2l6ZXMiOiIyNTZ4MjU2IiwidHlwZSI6ImltYWdlL3BuZyJ9XSwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiM2NjdlZWEifQ==">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+    
+    <title>🎮 מרקו - משחק מתמטיקה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,252 +19,600 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
         body {
-            font-family: 'Press Start 2P', cursive;
-            background: #87CEEB url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%2387CEEB"/><rect x="0" y="0" width="50" height="50" fill="%236FB3D2" opacity="0.1"/><rect x="50" y="50" width="50" height="50" fill="%236FB3D2" opacity="0.1"/></svg>');
+            font-family: 'Rubik', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             position: relative;
-            image-rendering: pixelated;
+            overflow: hidden;
         }
 
-        body.dark-mode {
-            background: #1a1a2e url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%231a1a2e"/><rect x="0" y="0" width="50" height="50" fill="%23000" opacity="0.3"/><rect x="50" y="50" width="50" height="50" fill="%23000" opacity="0.3"/></svg>');
-        }
-
-        /* Minecraft dirt block pattern */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .minecraft-block {
+        /* Animated Background Particles */
+        .particle {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            image-rendering: pixelated;
-            animation: float 3s ease-in-out infinite;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
             pointer-events: none;
-            background-size: cover;
+            animation: float-particle 8s infinite ease-in-out;
         }
 
-        .dirt-block { 
-            background: linear-gradient(135deg, #8B4513 25%, #654321 25%, #654321 50%, #8B4513 50%, #8B4513 75%, #654321 75%);
-            background-size: 8px 8px;
-            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.2);
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
         }
-        
-        .grass-block {
-            background: linear-gradient(to bottom, #7CBD6B 0%, #7CBD6B 20%, #8B6F47 20%, #8B6F47 100%);
-            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.2);
-        }
-
-        .stone-block {
-            background: #7F7F7F;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
-            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.2);
-        }
-
-        .diamond-block {
-            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 50%, #2874A6 100%);
-            background-size: 8px 8px;
-            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.4), 0 0 20px rgba(52,152,219,0.5);
-        }
-
-        .minecraft-block:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .minecraft-block:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.5s; }
-        .minecraft-block:nth-child(3) { top: 70%; left: 5%; animation-delay: 1s; }
-        .minecraft-block:nth-child(4) { top: 80%; right: 10%; animation-delay: 1.5s; }
 
         .container {
-            background: #C6C6C6;
-            border: 8px solid #555;
-            border-style: solid;
-            box-shadow: 
-                inset 4px 4px 0 rgba(255,255,255,0.4),
-                inset -4px -4px 0 rgba(0,0,0,0.4),
-                0 8px 0 #333,
-                0 10px 20px rgba(0,0,0,0.5);
-            padding: 30px;
-            max-width: 650px;
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            max-width: 700px;
             width: 100%;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
             position: relative;
-            image-rendering: pixelated;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
         }
 
-        body.dark-mode .container {
-            background: #3a3a3a;
-            border-color: #1a1a1a;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             position: relative;
         }
 
-        .theme-toggle {
+        .settings-btn {
             position: absolute;
-            top: -10px;
-            left: -10px;
-            background: #8B6F47;
-            border: 4px solid #555;
-            font-size: 20px;
+            top: 0;
+            left: 0;
+            background: var(--bg-light);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            font-size: 24px;
             cursor: pointer;
-            padding: 8px 12px;
-            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3);
-            font-family: 'Press Start 2P', cursive;
-            transition: all 0.1s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .theme-toggle:hover {
-            background: #7a5f3a;
+        .settings-btn:hover {
+            transform: scale(1.05) rotate(90deg);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .theme-toggle:active {
-            box-shadow: inset -2px -2px 0 rgba(255,255,255,0.3), inset 2px 2px 0 rgba(0,0,0,0.3);
-        }
-
-        .player-info {
+        .player-card {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 20px;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e2e8f0 100%);
+            border-radius: 24px;
             margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-            border: 4px solid #555;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
         .player-photo {
-            width: 80px;
-            height: 80px;
-            border: 4px solid #555;
-            image-rendering: pixelated;
-            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), inset -2px -2px 0 rgba(0,0,0,0.4);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .player-photo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .player-info {
+            flex: 1;
         }
 
         .player-name {
-            font-size: 28px;
-            color: #FFD700;
-            text-shadow: 
-                3px 3px 0 #000,
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
-            letter-spacing: 2px;
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
 
-        .health-bar {
+        .player-stats {
             display: flex;
-            gap: 4px;
-            justify-content: center;
-            margin-top: 15px;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-light);
         }
 
-        .heart {
-            width: 20px;
-            height: 20px;
-            background: #FF0000;
-            clip-path: polygon(50% 15%, 61% 5%, 80% 5%, 95% 20%, 95% 35%, 50% 80%, 5% 35%, 5% 20%, 20% 5%, 39% 5%);
-            image-rendering: pixelated;
-            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .menu {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 20px;
         }
 
         .mode-card {
-            background: #8B6F47;
-            border: 6px solid #555;
-            padding: 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 24px;
+            padding: 32px;
             cursor: pointer;
-            transition: all 0.1s;
-            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.3),
-                inset -3px -3px 0 rgba(0,0,0,0.4),
-                0 4px 0 #333;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .mode-card:hover {
-            background: #7a5f3a;
-            transform: translateY(-2px);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(102, 126, 234, 0.4);
         }
 
-        .mode-card:active {
-            transform: translateY(2px);
-            box-shadow: 
-                inset -3px -3px 0 rgba(255,255,255,0.3),
-                inset 3px 3px 0 rgba(0,0,0,0.4);
+        .mode-card:hover::before {
+            opacity: 1;
         }
 
         .mode-card.combat {
-            background: #C0392B;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
 
-        .mode-card.combat:hover {
-            background: #a93226;
+        .mode-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
         }
 
         .mode-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .mode-title {
-            font-size: 18px;
-            color: #FFF;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 12px;
-            text-shadow: 2px 2px 0 #000;
         }
 
         .mode-description {
-            font-size: 10px;
-            color: #DDD;
-            line-height: 1.6;
-        }
-
-        .exercise-type {
-            background: #7CBD6B;
-            border: 6px solid #555;
-            padding: 20px;
-            margin: 15px 0;
-            cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: inset 3px 3px 0 rgba(255,255,255,0.3), inset -3px -3px 0 rgba(0,0,0,0.4);
-        }
-
-        .exercise-type:hover {
-            background: #6aad5a;
-            transform: translateX(-4px);
-        }
-
-        .exercise-type:active {
-            box-shadow: inset -3px -3px 0 rgba(255,255,255,0.3), inset 3px 3px 0 rgba(0,0,0,0.4);
-        }
-
-        .exercise-type h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #FFF;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .exercise-type p {
-            font-size: 9px;
-            color: #EEE;
+            font-size: 16px;
+            opacity: 0.95;
             line-height: 1.5;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .exercise-card:hover {
+            transform: translateX(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .exercise-card h3 {
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .exercise-card p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Circular Timer */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .circular-timer {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .timer-ring {
+            transform: rotate(-90deg);
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 8;
+        }
+
+        .timer-circle {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .progress-section {
+            margin-bottom: 32px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 28px;
+            padding: 48px 32px;
+            margin: 32px 0;
+            text-align: center;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .question-text {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 32px;
+            animation: questionAppear 0.5s ease-out;
+        }
+
+        @keyframes questionAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 32px;
+            font-weight: 600;
+            border: 4px solid #e2e8f0;
+            border-radius: 20px;
+            text-align: center;
+            direction: ltr;
+            font-family: 'Rubik', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            padding: 18px 36px;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            font-family: 'Rubik', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-dark);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 24px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .feedback.correct {
+            color: var(--success);
+            animation: correctBounce 0.6s ease-out;
+        }
+
+        .feedback.incorrect {
+            color: var(--error);
+            animation: incorrectShake 0.5s ease-out;
+        }
+
+        @keyframes correctBounce {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2) rotate(5deg); }
+            50% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.15) rotate(3deg); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 28px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: 0 12px 32px rgba(251, 191, 36, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-display::before {
+            content: '✨';
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .score-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: white;
+            opacity: 0.95;
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .results-message {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+
+        .result-stat {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-value {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+            padding: 16px;
+        }
+
+        .btn-email {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .game-screen, .results-screen {
@@ -266,289 +621,131 @@
 
         .game-screen.active, .results-screen.active {
             display: block;
+            animation: fadeIn 0.4s ease-out;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 24px;
-            background: #333;
-            border: 4px solid #555;
-            margin-bottom: 20px;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5);
-            position: relative;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to bottom, #7CBD6B 0%, #5da04d 50%, #4d8a3e 100%);
-            transition: width 0.3s ease;
-            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3);
+        /* Confetti Effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            position: absolute;
+            animation: confettiFall 3s linear forwards;
         }
 
-        .question-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: #000;
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
-        .question-box {
-            background: rgba(0,0,0,0.3);
-            border: 6px solid #555;
-            padding: 30px;
-            margin: 20px 0;
+        /* Install Button */
+        .install-prompt {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.4);
-        }
-
-        .question-text {
-            font-size: 32px;
-            color: #FFF;
-            margin-bottom: 25px;
-            text-shadow: 3px 3px 0 #000;
-        }
-
-        .answer-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 24px;
-            border: 6px solid #555;
-            text-align: center;
-            direction: ltr;
-            font-family: 'Press Start 2P', cursive;
-            background: #FFF;
-            box-shadow: inset 3px 3px 0 rgba(0,0,0,0.3);
-        }
-
-        .answer-input:focus {
-            outline: none;
-            border-color: #FFD700;
-            background: #FFFACD;
-        }
-
-        .btn {
-            padding: 15px 25px;
-            font-size: 14px;
-            border: 6px solid #555;
+            margin-bottom: 20px;
             cursor: pointer;
-            width: 100%;
-            font-family: 'Press Start 2P', cursive;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-            transition: all 0.1s;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-primary {
-            background: #7CBD6B;
-            color: #FFF;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.3),
-                inset -3px -3px 0 rgba(0,0,0,0.4),
-                0 4px 0 #4d8a3e;
+        .install-prompt:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-primary:hover {
-            background: #6aad5a;
-            transform: translateY(-2px);
-        }
-
-        .btn-primary:active {
-            transform: translateY(2px);
-            box-shadow: 
-                inset -3px -3px 0 rgba(255,255,255,0.3),
-                inset 3px 3px 0 rgba(0,0,0,0.4);
-        }
-
-        .btn-secondary {
-            background: #7F7F7F;
-            color: #FFF;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.3),
-                inset -3px -3px 0 rgba(0,0,0,0.4),
-                0 4px 0 #555;
-        }
-
-        .btn-secondary:hover {
-            background: #6e6e6e;
-        }
-
-        .feedback {
-            text-align: center;
-            font-size: 16px;
-            margin: 20px 0;
-            min-height: 40px;
-            line-height: 1.5;
-        }
-
-        .feedback.correct {
-            color: #7CBD6B;
-            text-shadow: 2px 2px 0 #000;
-            animation: bounce 0.5s;
-        }
-
-        .feedback.incorrect {
-            color: #C0392B;
-            text-shadow: 2px 2px 0 #000;
-            animation: shake 0.5s;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.1); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .score-display {
-            background: #FFD700;
-            border: 6px solid #555;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.5),
-                inset -3px -3px 0 rgba(0,0,0,0.3),
-                0 8px 0 #997000;
-        }
-
-        .score-number {
-            font-size: 48px;
-            color: #000;
-            text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
-        }
-
-        .score-text {
-            font-size: 12px;
-            margin-top: 10px;
-            color: #333;
-        }
-
-        .results-message {
-            font-size: 16px;
-            text-align: center;
-            margin: 25px 0;
-            color: #000;
-            line-height: 1.8;
-            text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-        }
-
-        .results-details {
-            background: rgba(0,0,0,0.2);
-            border: 6px solid #555;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.4);
-        }
-
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 2px solid #555;
-            font-size: 11px;
-            color: #FFF;
-        }
-
-        .result-row:last-child {
-            border-bottom: none;
-        }
-
-        .send-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-send {
-            flex: 1;
-            font-size: 11px;
-            padding: 12px;
-        }
-
-        .btn-email {
-            background: #2ECC71;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.3),
-                inset -3px -3px 0 rgba(0,0,0,0.4),
-                0 4px 0 #229954;
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            box-shadow: 
-                inset 3px 3px 0 rgba(255,255,255,0.3),
-                inset -3px -3px 0 rgba(0,0,0,0.4),
-                0 4px 0 #1DA851;
-        }
-
-        .timer {
-            font-size: 18px;
-            color: #FFF;
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 12px;
-            background: rgba(0,0,0,0.4);
-            border: 4px solid #555;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.4);
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
             .container {
-                padding: 20px;
+                padding: 24px;
+                border-radius: 24px;
             }
-            
+
             .player-name {
-                font-size: 20px;
+                font-size: 28px;
             }
-            
+
             .question-text {
+                font-size: 36px;
+            }
+
+            .answer-input {
                 font-size: 24px;
             }
-            
-            .answer-input {
-                font-size: 20px;
+
+            .results-grid {
+                grid-template-columns: 1fr;
             }
 
-            .mode-title {
-                font-size: 14px;
+            .action-grid {
+                grid-template-columns: 1fr;
             }
+        }
 
-            .mode-description {
-                font-size: 8px;
-            }
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <!-- Minecraft floating blocks -->
-    <div class="minecraft-block dirt-block"></div>
-    <div class="minecraft-block grass-block"></div>
-    <div class="minecraft-block stone-block"></div>
-    <div class="minecraft-block diamond-block"></div>
+    <!-- Background Particles -->
+    <script>
+        for(let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <!-- Sound Toggle -->
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
 
     <div class="container">
+        <!-- Install Prompt -->
+        <div class="install-prompt hidden" id="installPrompt">
+            <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">📲 התקן את האפליקציה</div>
+            <div style="font-size: 14px; opacity: 0.9;">גישה מהירה ישירות מהמסך הראשי!</div>
+        </div>
+
         <div class="header">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-            <div class="player-info">
+            <button class="settings-btn" onclick="toggleTheme()">⚙️</button>
+            
+            <div class="player-card">
                 <img src="https://i.imgur.com/Kz4OrqI.jpg" class="player-photo" alt="מרקו">
-                <div>
-                    <h1 class="player-name">מרקו</h1>
-                    <div class="health-bar">
-                        <div class="heart"></div>
-                        <div class="heart"></div>
-                        <div class="heart"></div>
-                        <div class="heart"></div>
-                        <div class="heart"></div>
+                <div class="player-info">
+                    <div class="player-name">מרקו</div>
+                    <div class="player-stats">
+                        <div class="stat">🎮 <span>Level 7</span></div>
+                        <div class="stat">⭐ <span id="totalScore">0</span></div>
                     </div>
                 </div>
             </div>
@@ -557,103 +754,189 @@
         <!-- Menu Screen -->
         <div id="menuScreen" class="menu">
             <div class="mode-card" onclick="selectMode('training')">
-                <div class="mode-icon">⛏️</div>
-                <div class="mode-title">Creative Mode</div>
-                <div class="mode-description">תרגל בלי לחץ<br>בניה חופשית!</div>
+                <div class="mode-content">
+                    <div class="mode-icon">📚</div>
+                    <div class="mode-title">אימון חופשי</div>
+                    <div class="mode-description">תרגל ללא לחץ זמן<br>ללמוד בקצב שלך</div>
+                </div>
             </div>
             
             <div class="mode-card combat" onclick="selectMode('combat')">
-                <div class="mode-icon">⚔️</div>
-                <div class="mode-title">Survival Mode</div>
-                <div class="mode-description">קרב אמיתי!<br>התוצאות נשלחות לאבא</div>
+                <div class="mode-content">
+                    <div class="mode-icon">⚔️</div>
+                    <div class="mode-title">אתגר מתוזמן</div>
+                    <div class="mode-description">5 דקות להוכחה!<br>התוצאות נשלחות לאבא</div>
+                </div>
             </div>
         </div>
 
-        <!-- Exercise Selection Screen -->
+        <!-- Exercise Selection -->
         <div id="exerciseScreen" class="hidden">
-            <h2 style="text-align: center; margin-bottom: 25px; font-size: 16px; color: #000;">⛏️ בחר משימה</h2>
+            <h2 style="text-align: center; font-size: 28px; color: var(--text-dark); margin-bottom: 24px;">
+                🎯 בחר תרגילים
+            </h2>
             
-            <div class="exercise-type" onclick="startGame('school')">
-                <h3>📝 תרגילי בית הספר</h3>
-                <p>המבחן שלך - 15 שאלות</p>
+            <div class="exercise-grid">
+                <div class="exercise-card" onclick="startGame('school')">
+                    <h3>📝 תרגילי בית הספר</h3>
+                    <p>15 שאלות מהמבחן שלך</p>
+                </div>
+                
+                <div class="exercise-card" onclick="startGame('multiples2')">
+                    <h3>💎 כפולות של 2</h3>
+                    <p>2, 4, 8, 16... עד 2048!</p>
+                </div>
             </div>
             
-            <div class="exercise-type" onclick="startGame('multiples2')">
-                <h3>💎 כפולות של 2</h3>
-                <p>2, 4, 8, 16... עד 2048!</p>
-            </div>
-            
-            <button class="btn btn-secondary" onclick="backToMenu()">חזרה</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">🔙 חזרה לתפריט</button>
         </div>
 
         <!-- Game Screen -->
         <div id="gameScreen" class="game-screen">
-            <div class="timer" id="timer">⏱️ 05:00</div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
+            <div class="timer-container hidden" id="timerContainer">
+                <div class="circular-timer">
+                    <svg class="timer-ring" width="120" height="120">
+                        <circle class="timer-circle-bg" cx="60" cy="60" r="52"></circle>
+                        <circle class="timer-circle" id="timerCircle" cx="60" cy="60" r="52" 
+                                stroke-dasharray="326.73" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="timer-text" id="timerText">5:00</div>
+                </div>
             </div>
-            
-            <div class="question-info">
-                <span id="questionNumber">שאלה 1/15</span>
-                <span id="currentScore">⭐ 0</span>
+
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span id="questionNumber">שאלה 1/15</span>
+                    <span id="currentScore">⭐ 0</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
             </div>
-            
-            <div class="question-box">
+
+            <div class="question-card">
                 <div class="question-text" id="questionText">7 + 6 = ?</div>
-                <input type="number" class="answer-input" id="answerInput" placeholder="?">
+                <input type="number" class="answer-input" id="answerInput" placeholder="התשובה שלך">
             </div>
-            
+
             <div class="feedback" id="feedback"></div>
-            
-            <button class="btn btn-primary" onclick="checkAnswer()">בדוק</button>
-            <button class="btn btn-secondary" onclick="skipQuestion()">דלג</button>
+
+            <button class="btn btn-primary" onclick="checkAnswer()">✅ בדוק תשובה</button>
+            <button class="btn btn-secondary" onclick="skipQuestion()">⏭️ דלג לשאלה הבאה</button>
         </div>
 
         <!-- Results Screen -->
         <div id="resultsScreen" class="results-screen">
             <div class="score-display">
                 <div class="score-number" id="finalScore">0</div>
-                <div class="score-text">ניקוד סופי</div>
+                <div class="score-label">הניקוד הסופי שלך</div>
             </div>
-            
+
             <div class="results-message" id="resultsMessage"></div>
-            
-            <div class="results-details">
-                <div class="result-row">
-                    <span>✅ נכונות</span>
-                    <span id="correctAnswers">0</span>
+
+            <div class="results-grid">
+                <div class="result-stat">
+                    <div class="result-value" id="correctAnswers">0</div>
+                    <div class="result-label">תשובות נכונות</div>
                 </div>
-                <div class="result-row">
-                    <span>📊 סה"כ</span>
-                    <span id="totalQuestions">0</span>
+                <div class="result-stat">
+                    <div class="result-value" id="totalQuestions">0</div>
+                    <div class="result-label">סך הכל שאלות</div>
                 </div>
-                <div class="result-row">
-                    <span>⏱️ זמן</span>
-                    <span id="timeElapsed">0:00</span>
+                <div class="result-stat">
+                    <div class="result-value" id="timeElapsed">0:00</div>
+                    <div class="result-label">זמן שחלף</div>
                 </div>
-                <div class="result-row">
-                    <span>📈 אחוזים</span>
-                    <span id="successRate">0%</span>
+                <div class="result-stat">
+                    <div class="result-value" id="successRate">0%</div>
+                    <div class="result-label">אחוז הצלחה</div>
                 </div>
             </div>
-            
-            <div id="sendOptionsDiv" class="send-options hidden">
-                <button class="btn btn-send btn-email" onclick="sendEmail()">📧 Email</button>
-                <button class="btn btn-send btn-whatsapp" onclick="sendWhatsApp()">💬 WhatsApp</button>
+
+            <div id="sendOptionsDiv" class="action-grid hidden">
+                <button class="btn btn-icon btn-email" onclick="sendEmail()">
+                    📧 שלח באימייל
+                </button>
+                <button class="btn btn-icon btn-whatsapp" onclick="sendWhatsApp()">
+                    💬 שלח בוואטסאפ
+                </button>
             </div>
-            
-            <button class="btn btn-primary" onclick="restartGame()">שחק שוב</button>
-            <button class="btn btn-secondary" onclick="backToMenu()">תפריט</button>
+
+            <button class="btn btn-primary" onclick="restartGame()" style="margin-top: 16px;">🔄 שחק שוב</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">🏠 חזרה לתפריט</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        // EmailJS Init
         emailjs.init('J6SRq_9hlzb7fA9KB');
 
+        // PWA Installation
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.remove('hidden');
+        });
+
+        document.getElementById('installPrompt').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installPrompt').classList.add('hidden');
+            }
+        });
+
+        // Sound Management
+        let soundEnabled = true;
+        const sounds = {
+            click: () => playTone(800, 0.1, 0.05),
+            correct: () => playTone([600, 800, 1000], 0.2, 0.15),
+            incorrect: () => playTone(200, 0.3, 0.15),
+            victory: () => playMelody([523, 587, 659, 784], 0.2)
+        };
+
+        function playTone(freq, duration, volume = 0.1) {
+            if (!soundEnabled) return;
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const frequencies = Array.isArray(freq) ? freq : [freq];
+            
+            frequencies.forEach((f, i) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = f;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + duration);
+                }, i * 100);
+            });
+        }
+
+        function playMelody(notes, duration) {
+            notes.forEach((note, i) => {
+                setTimeout(() => playTone(note, duration), i * duration * 1000);
+            });
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+            if (soundEnabled) sounds.click();
+        }
+
+        // Game State
         let currentMode = null;
-        let currentExerciseType = null;
         let questions = [];
         let currentQuestionIndex = 0;
         let score = 0;
@@ -697,13 +980,14 @@
         }
 
         function selectMode(mode) {
+            sounds.click();
             currentMode = mode;
             document.getElementById('menuScreen').classList.add('hidden');
             document.getElementById('exerciseScreen').classList.remove('hidden');
         }
 
         function startGame(exerciseType) {
-            currentExerciseType = exerciseType;
+            sounds.click();
             questions = exerciseType === 'school' ? [...schoolExercises] : generateMultiples2();
             questions = questions.sort(() => Math.random() - 0.5);
             
@@ -718,30 +1002,38 @@
             
             if (currentMode === 'combat') {
                 timeRemaining = 300;
+                document.getElementById('timerContainer').classList.remove('hidden');
                 startTimer();
             } else {
-                document.getElementById('timer').classList.add('hidden');
+                document.getElementById('timerContainer').classList.add('hidden');
             }
             
             showQuestion();
         }
 
         function startTimer() {
+            const circle = document.getElementById('timerCircle');
+            const circumference = 2 * Math.PI * 52;
+            
             timerInterval = setInterval(() => {
                 timeRemaining--;
-                updateTimerDisplay();
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timerText').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                const offset = circumference * (1 - timeRemaining / 300);
+                circle.style.strokeDashoffset = offset;
+                
+                if (timeRemaining <= 10 && timeRemaining > 0) {
+                    sounds.click();
+                }
+                
                 if (timeRemaining <= 0) {
                     clearInterval(timerInterval);
                     endGame();
                 }
             }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('timer').textContent = 
-                `⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
         function showQuestion() {
@@ -753,7 +1045,6 @@
             const question = questions[currentQuestionIndex];
             let questionText = question.q;
             
-            // Only add " = ?" if it's not a fill-in-the-blank question
             if (!question.isFillIn) {
                 questionText = questionText + " = ?";
             }
@@ -766,7 +1057,7 @@
             document.getElementById('feedback').textContent = '';
             document.getElementById('answerInput').focus();
             
-            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            const progress = (currentQuestionIndex / questions.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
         }
 
@@ -776,19 +1067,23 @@
             const feedbackEl = document.getElementById('feedback');
             
             if (isNaN(userAnswer)) {
-                feedbackEl.textContent = '❗ הזן מספר';
+                feedbackEl.textContent = '❗ אנא הזן מספר';
                 feedbackEl.className = 'feedback incorrect';
+                sounds.incorrect();
                 return;
             }
             
             if (userAnswer === correctAnswer) {
-                feedbackEl.textContent = '✅ נכון!\n+10 XP';
+                feedbackEl.innerHTML = '✅ מעולה! +10 נקודות';
                 feedbackEl.className = 'feedback correct';
                 score += 10;
                 correctAnswers++;
+                sounds.correct();
+                createConfetti();
             } else {
-                feedbackEl.textContent = `❌ לא נכון\nהתשובה: ${correctAnswer}`;
+                feedbackEl.innerHTML = `❌ לא נכון<br>התשובה הנכונה: ${correctAnswer}`;
                 feedbackEl.className = 'feedback incorrect';
+                sounds.incorrect();
                 wrongAnswers.push({
                     question: questions[currentQuestionIndex].q,
                     correct: correctAnswer,
@@ -799,10 +1094,11 @@
             setTimeout(() => {
                 currentQuestionIndex++;
                 showQuestion();
-            }, 1500);
+            }, 2000);
         }
 
         function skipQuestion() {
+            sounds.click();
             wrongAnswers.push({
                 question: questions[currentQuestionIndex].q,
                 correct: questions[currentQuestionIndex].a,
@@ -810,6 +1106,20 @@
             });
             currentQuestionIndex++;
             showQuestion();
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = ['#667eea', '#764ba2', '#10b981', '#f59e0b'][Math.floor(Math.random() * 4)];
+                    confetti.style.top = '-10px';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
         }
 
         function endGame() {
@@ -833,15 +1143,22 @@
             
             let message = '';
             if (successRate >= 90) {
-                message = '💎 Diamond Level!\nאתה אלוף!';
+                message = '🌟 מדהים! אתה גאון מתמטיקה!';
+                sounds.victory();
+                createConfetti();
             } else if (successRate >= 70) {
-                message = '🥇 Gold Level!\nכל הכבוד!';
+                message = '🎉 כל הכבוד! ביצועים מעולים!';
+                sounds.correct();
             } else if (successRate >= 50) {
-                message = '⚒️ Iron Level\nהמשך ככה!';
+                message = '💪 יפה! המשך להתאמן!';
             } else {
-                message = '🪵 Wood Level\nתתאמן עוד!';
+                message = '📚 בואו נתרגל עוד קצת!';
             }
             document.getElementById('resultsMessage').textContent = message;
+            
+            // Update total score
+            const currentTotal = parseInt(document.getElementById('totalScore').textContent) || 0;
+            document.getElementById('totalScore').textContent = currentTotal + score;
             
             if (currentMode === 'combat') {
                 document.getElementById('sendOptionsDiv').classList.remove('hidden');
@@ -851,6 +1168,7 @@
         }
 
         function sendEmail() {
+            sounds.click();
             const timeElapsed = document.getElementById('timeElapsed').textContent;
             const successRate = document.getElementById('successRate').textContent;
             
@@ -863,29 +1181,32 @@
             }
             
             const templateParams = {
-                from_name: 'מרקו ⛏️',
+                from_name: 'מרקו 🎮',
                 to_email: 'yohan.d@qualiwatt.com',
                 score: score,
                 total: questions.length,
                 correct: correctAnswers,
                 time: timeElapsed,
                 success_rate: successRate,
-                details: detailsText || 'כל התשובות נכונות! 💎'
+                details: detailsText || 'כל התשובות נכונות! 🎉'
             };
             
             emailjs.send('service_5qgrys8', 'template_0vkv28s', templateParams)
-                .then(function() {
-                    alert('✅ נשלח לאבא!');
-                }, function(error) {
-                    alert('❌ שגיאה. נסה WhatsApp');
+                .then(() => {
+                    alert('✅ הודעה נשלחה בהצלחה לאבא! 🚀');
+                    sounds.correct();
+                }, () => {
+                    alert('❌ שגיאה בשליחה. נסה שוב או שלח בוואטסאפ.');
+                    sounds.incorrect();
                 });
         }
 
         function sendWhatsApp() {
+            sounds.click();
             const timeElapsed = document.getElementById('timeElapsed').textContent;
             const successRate = document.getElementById('successRate').textContent;
             
-            let message = `⛏️ משחק מתמטיקה - מרקו\n\n`;
+            let message = `🎮 תוצאות משחק מתמטיקה - מרקו\n\n`;
             message += `⭐ ניקוד: ${score}/${questions.length * 10}\n`;
             message += `✅ נכונות: ${correctAnswers}/${questions.length}\n`;
             message += `⏱️ זמן: ${timeElapsed}\n`;
@@ -897,39 +1218,47 @@
                     message += `${w.question} = ? (${w.correct}/${w.given})\n`;
                 });
             } else {
-                message += `\n💎 הכל נכון!`;
+                message += `\n🎉 כל התשובות נכונות!`;
             }
             
             window.open(`https://wa.me/33756978517?text=${encodeURIComponent(message)}`, '_blank');
         }
 
         function restartGame() {
+            sounds.click();
             document.getElementById('resultsScreen').classList.remove('active');
             document.getElementById('exerciseScreen').classList.remove('hidden');
         }
 
         function backToMenu() {
+            sounds.click();
             document.getElementById('exerciseScreen').classList.add('hidden');
             document.getElementById('resultsScreen').classList.remove('active');
             document.getElementById('gameScreen').classList.remove('active');
             document.getElementById('menuScreen').classList.remove('hidden');
-            document.getElementById('timer').classList.remove('hidden');
             currentMode = null;
         }
 
         function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const btn = document.querySelector('.theme-toggle');
-            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            sounds.click();
+            // Theme toggle functionality can be added here
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+        // Enter key support
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('answerInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     checkAnswer();
                 }
             });
         });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZSA9PiB7CiAgZS53YWl0VW50aWwoCiAgICBjYWNoZXMub3BlbignbWFyY28tZ2FtZS12MScpLnRoZW4oY2FjaGUgPT4gewogICAgICByZXR1cm4gY2FjaGUuYWRkQWxsKFsnLyddKTsKICAgIH0pCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZSA9PiB7CiAgZS5yZXNwb25kV2l0aCgKICAgIGNhY2hlcy5tYXRjaChlLnJlcXVlc3QpLnRoZW4ocmVzcG9uc2UgPT4gewogICAgICByZXR1cm4gcmVzcG9uc2UgfHwgZmV0Y2goZS5yZXF1ZXN0KTsKICAgIH0pCiAgKTsKfSk7');
+            });
+        }
     </script>
 </body>
 </html>
